@@ -5,6 +5,10 @@ Live demo is available here: [https://stakes-io-598464211339.us-west2.run.app](h
 
 A high-stakes accountability platform that forces execution by putting your reputation (or money) on the line.
 
+
+## Demo
+![Dashboard Demo](assets/demo.png)
+
 ## Productivity Value
 When intrinsic motivation fails, external consequences are required. Stakes.io is built for high-performers who need strict accountability. By creating a public "Stake," you commit to a goal with a verifiable deadline and consequence. The public feed ensures social pressure, turning procrastination into an unacceptable outcome.
 
