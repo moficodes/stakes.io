@@ -12,8 +12,19 @@ To try out the application, you can use the following test account:
 - **Email:** `test@test.com`
 - **Password:** `p@$$w0rd`
 
-## Demo
-![Dashboard Demo](assets/demo.png)
+## Walkthrough
+
+### 1. Landing Page
+![Landing Page](assets/01-landing.png)
+
+### 2. Dashboard
+![Dashboard](assets/02-dashboard.png)
+
+### 3. Create a Stake
+![Create Stake](assets/03-create-stake.png)
+
+### 4. Public Feed
+![Public Feed](assets/04-feed.png)
 
 ## Productivity Value
 When intrinsic motivation fails, external consequences are required. Stakes.io is built for high-performers who need strict accountability. By creating a public "Stake," you commit to a goal with a verifiable deadline and consequence. The public feed ensures social pressure, turning procrastination into an unacceptable outcome.
