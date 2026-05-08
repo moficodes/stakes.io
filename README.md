@@ -1,4 +1,7 @@
 # Stakes.io
+## Try it out!
+Live demo is available here: [https://stakes-io-598464211339.us-west2.run.app](https://stakes-io-598464211339.us-west2.run.app)
+
 
 A high-stakes accountability platform that forces execution by putting your reputation (or money) on the line.
 
