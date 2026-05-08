@@ -1,0 +1,67 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile and statistics",
+      "type": "object",
+      "properties": {
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "stats": {
+          "type": "object",
+          "properties": {
+            "completedCount": { "type": "integer" },
+            "failedCount": { "type": "integer" },
+            "totalStaked": { "type": "integer" }
+          }
+        },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["displayName"]
+    },
+    "Stake": {
+      "title": "Stake",
+      "description": "A commitment stake",
+      "type": "object",
+      "properties": {
+        "creatorId": { "type": "string" },
+        "creatorName": { "type": "string" },
+        "creatorPhoto": { "type": "string" },
+        "task": { "type": "string" },
+        "deadline": { "type": "string", "format": "date-time" },
+        "stakeType": { "type": "string", "enum": ["money", "social_shame", "charity"] },
+        "stakeValue": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "completed", "failed"] },
+        "proofURL": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["creatorId", "task", "deadline", "stakeType", "stakeValue", "status", "createdAt", "updatedAt"]
+    },
+    "Cheer": {
+      "title": "Cheer",
+      "description": "A motivational cheer from a peer",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles"
+    },
+    "/stakes/{stakeId}": {
+      "schema": "Stake",
+      "description": "Commitment stakes"
+    },
+    "/stakes/{stakeId}/cheers/{cheerId}": {
+      "schema": "Cheer",
+      "description": "Cheers for a stake"
+    }
+  }
+}

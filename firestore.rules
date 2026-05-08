@@ -1,0 +1,89 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 1. Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // 2. Global Helpers
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    function isEmailVerified() {
+      return request.auth.token.email_verified == true;
+    }
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+    function incoming() {
+      return request.resource.data;
+    }
+    function existing() {
+      return resource.data;
+    }
+
+    // 3. Entity Validations
+    function isValidUser(data) {
+      return data.displayName is string && data.displayName.size() >= 2 && data.displayName.size() <= 100
+        && (data.get('photoURL', '') is string)
+        && (data.get('stats', null) == null || (
+             data.stats.completedCount is int &&
+             data.stats.failedCount is int &&
+             data.stats.totalStaked is int
+           ))
+        && data.updatedAt == request.time;
+    }
+
+    function isValidStake(data) {
+      return data.creatorId == request.auth.uid
+        && data.task is string && data.task.size() >= 5 && data.task.size() <= 500
+        && data.stakeType in ['money', 'social_shame', 'charity']
+        && data.stakeValue is string && data.stakeValue.size() <= 200
+        && data.status in ['pending', 'completed', 'failed']
+        && (data.get('proofURL', '') is string)
+        && (data.get('creatorName', '') is string)
+        && (data.get('creatorPhoto', '') is string)
+        && data.createdAt == (resource == null ? request.time : resource.data.createdAt)
+        && data.updatedAt == request.time;
+    }
+
+    function isValidCheer(data) {
+      return data.userId == request.auth.uid
+        && data.userName is string
+        && data.createdAt == request.time;
+    }
+
+    // 4. Collection Rules
+
+    match /users/{userId} {
+      allow get: if isSignedIn();
+      allow list: if true; // Allow public listing for the "operatives" count
+      allow create: if isOwner(userId) && isValidUser(incoming());
+      allow update: if isOwner(userId) && isValidUser(incoming()) && (
+        incoming().diff(existing()).affectedKeys().hasOnly(['displayName', 'photoURL', 'stats', 'updatedAt'])
+      );
+    }
+
+    match /stakes/{stakeId} {
+      allow get: if isSignedIn() || resource.data.status == 'pending';
+      allow list: if resource.data.status == 'pending' || (isSignedIn() && resource.data.creatorId == request.auth.uid);
+      allow create: if isSignedIn() && isValidId(stakeId) && isValidStake(incoming());
+      allow update: if isSignedIn() && isValidStake(incoming()) && (
+        // Action: Complete/Fail (Owner only)
+        (isOwner(existing().creatorId) && incoming().diff(existing()).affectedKeys().hasOnly(['status', 'proofURL', 'updatedAt']) && existing().status == 'pending') ||
+        // Action: Update details (Owner only, only if pending)
+        (isOwner(existing().creatorId) && existing().status == 'pending' && incoming().diff(existing()).affectedKeys().hasOnly(['task', 'deadline', 'stakeType', 'stakeValue', 'updatedAt']))
+      );
+      allow delete: if false; // Stakes are permanent records of failure or success
+
+      match /cheers/{cheerId} {
+        allow read: if true;
+        allow create: if isSignedIn() && isValidId(cheerId) && isValidCheer(incoming()) && get(/databases/$(database)/documents/stakes/$(stakeId)).data.status == 'pending';
+      }
+    }
+  }
+}
