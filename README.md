@@ -10,7 +10,7 @@ A high-stakes accountability platform that forces execution by putting your repu
 ## Test Credentials
 To try out the application, you can use the following test account:
 - **Email:** `test@test.com`
-- **Password:** `p@$w0rd`
+- **Password:** `p@$$w0rd`
 
 ## Demo
 ![Dashboard Demo](assets/demo.png)
