@@ -27,6 +27,7 @@ import Dashboard from './pages/Dashboard';
 import CreateStake from './pages/CreateStake';
 import Feed from './pages/Feed';
 import { cn } from './lib/utils';
+import { AuthModal } from './components/AuthModal';
 
 function Navigation() {
   const { user, openAuthModal, logout } = useAuth();
@@ -123,6 +124,7 @@ export default function App() {
       <Router>
         <div className="min-h-screen bg-zinc-950 text-zinc-100 font-sans selection:bg-rose-600 selection:text-white">
           <Navigation />
+          <AuthModal />
           <PageTransition>
             <Routes>
               <Route path="/" element={<Home />} />
