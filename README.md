@@ -6,6 +6,12 @@ Live demo is available here: [https://stakes-io-598464211339.us-west2.run.app](h
 A high-stakes accountability platform that forces execution by putting your reputation (or money) on the line.
 
 
+
+## Test Credentials
+To try out the application, you can use the following test account:
+- **Email:** `test@test.com`
+- **Password:** `p@$w0rd`
+
 ## Demo
 ![Dashboard Demo](assets/demo.png)
 
