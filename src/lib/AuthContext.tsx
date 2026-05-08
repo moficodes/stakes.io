@@ -17,8 +17,12 @@ interface AuthContextType {
   user: User | null;
   userData: UserData | null;
   loading: boolean;
-  signIn: () => Promise<void>;
+  signInWithGoogle: () => Promise<void>;
+  signInWithEmail: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  isAuthModalOpen: boolean;
+  openAuthModal: () => void;
+  closeAuthModal: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -27,6 +31,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+
+  const openAuthModal = () => setIsAuthModalOpen(true);
+  const closeAuthModal = () => setIsAuthModalOpen(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -63,11 +71,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return unsubscribe;
   }, []);
 
-  const signIn = async () => {
+  const signInWithGoogle = async () => {
     try {
       await signInWithPopup(auth, googleProvider);
+      closeAuthModal();
     } catch (error) {
       console.error("Sign in failed:", error);
+      throw error;
+    }
+  };
+
+  const signInWithEmail = async (email: string, password: string) => {
+    try {
+      const { signInWithEmailAndPassword } = await import('./firebase');
+      await signInWithEmailAndPassword(auth, email, password);
+      closeAuthModal();
+    } catch (error) {
+      console.error("Email sign in failed:", error);
+      throw error;
     }
   };
 
@@ -80,7 +101,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, userData, loading, signIn, logout }}>
+    <AuthContext.Provider value={{ 
+      user, userData, loading, 
+      signInWithGoogle, signInWithEmail, logout,
+      isAuthModalOpen, openAuthModal, closeAuthModal
+    }}>
       {children}
     </AuthContext.Provider>
   );

@@ -7,7 +7,7 @@ import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 
 export default function Home() {
-  const { user, signIn } = useAuth();
+  const { user, openAuthModal } = useAuth();
   const [totalPool, setTotalPool] = useState(0);
   const [userCount, setUserCount] = useState(0);
 
@@ -92,7 +92,7 @@ export default function Home() {
             </Link>
           ) : (
             <button
-              onClick={signIn}
+              onClick={openAuthModal}
               className="bg-rose-600 text-white px-10 py-5 rounded-2xl font-black text-xl flex items-center gap-3 hover:bg-rose-700 transition-all shadow-2xl shadow-rose-600/20 uppercase tracking-tighter"
             >
               Start A Stake
@@ -235,7 +235,7 @@ export default function Home() {
              Don't let another year slip by. Set your first stake today and experience what it feels like to finally be unstoppable.
            </p>
            <button
-             onClick={signIn}
+             onClick={openAuthModal}
              className="bg-rose-600 text-white px-10 py-5 rounded-2xl font-black text-xl hover:bg-rose-700 transition-all shadow-xl shadow-rose-600/20 uppercase tracking-tighter"
            >
              Initialize Stake

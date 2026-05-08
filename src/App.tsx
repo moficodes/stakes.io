@@ -29,7 +29,7 @@ import Feed from './pages/Feed';
 import { cn } from './lib/utils';
 
 function Navigation() {
-  const { user, signIn, logout } = useAuth();
+  const { user, openAuthModal, logout } = useAuth();
   const location = useLocation();
 
   const navItems = [
@@ -86,7 +86,7 @@ function Navigation() {
               </>
             ) : (
               <button
-                onClick={signIn}
+                onClick={openAuthModal}
                 className="bg-rose-600 text-white px-8 py-2.5 rounded-xl text-sm font-bold hover:bg-rose-700 transition-colors shadow-lg shadow-rose-600/20"
               >
                 Sign In
